@@ -1,0 +1,71 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: { typeName: 'Leave Request',
+                typeNamePlural: 'Leave Requests',
+                title: { type: #STANDARD, value: 'EmpId' },
+                description: { type: #STANDARD, value: 'EmpName' }, // Added Name to Header
+                imageUrl: 'ImageUrl' }, 
+  presentationVariant: [{ sortOrder: [{ by: 'CreatedAt', direction: #DESC }] }] 
+}
+annotate view ZC_LEAVE with 
+{
+  @UI.facet: [ { id: 'LeaveData', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Leave Request Details', position: 10 } ]
+  
+  @UI.hidden: true
+  ReqId;
+  
+  // ---> CHANGED: ImageUrl is only for the List Report (read-only display) <---
+  @UI: { lineItem:       [ { position: 10, label: 'Photo' } ] }
+  ImageUrl;
+  
+  // ---> NEW: ImageUrlInput is only for the Object Page (text input) <---
+  @UI: { identification: [ { position: 15, label: 'Image URL' } ] }
+  @UI.hidden: #(IsActiveEntity)
+  ImageUrlInput;
+  
+  @UI: { lineItem:       [ { position: 20 } ],
+         identification: [ { position: 10 } ],
+         selectionField: [ { position: 10 } ] }
+  EmpId;
+  
+  // ---> NEW FIELD: Employee Name <---
+  @UI: { lineItem:       [ { position: 25 } ],
+         identification: [ { position: 15 } ],
+         selectionField: [ { position: 15 } ] }
+  EmpName;
+  
+  @UI: { lineItem:       [ { position: 30 } ],
+         identification: [ { position: 20 } ],
+         selectionField: [ { position: 20 } ] }
+  Department;
+  
+  @UI: { lineItem:       [ { position: 40 } ],
+         identification: [ { position: 30 } ] }
+  StartDate;
+  
+  @UI: { lineItem:       [ { position: 50 } ],
+         identification: [ { position: 40 } ] }
+  EndDate;
+  
+  @UI: { lineItem:       [ { position: 60 } ],
+         identification: [ { position: 50 } ] }
+  TotalDays;
+  
+  @UI: { lineItem:       [ { position: 70 } ],
+         identification: [ { position: 60 } ] }
+  Reason;
+  
+  @UI: { lineItem:       [ { position: 80, criticality: 'StatusCriticality' },
+                           { type: #FOR_ACTION, dataAction: 'approveLeave', label: 'Approve' },
+                           { type: #FOR_ACTION, dataAction: 'rejectLeave', label: 'Reject' } ],
+         identification: [ { position: 70, criticality: 'StatusCriticality' },
+                           { type: #FOR_ACTION, dataAction: 'approveLeave', label: 'Approve' },
+                           { type: #FOR_ACTION, dataAction: 'rejectLeave', label: 'Reject' } ] }
+  Status;
+  
+  @UI.hidden: true
+  StatusCriticality;
+  
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

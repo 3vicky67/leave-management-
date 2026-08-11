@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: { typeName: 'Employee',
+                typeNamePlural: 'Employees',
+                title: { type: #STANDARD, value: 'EmpName' } }
+}
+annotate view ZCEmployee with 
+{
+  // ---> FIXED: Changed to FIELDGROUP_REFERENCE for a cleaner form layout <---
+  @UI.facet: [ { id:              'EmployeeData', 
+                 purpose:         #STANDARD, 
+                 type:            #FIELDGROUP_REFERENCE, 
+                 targetQualifier: 'GeneralData', 
+                 label:           'Employee Details', 
+                 position:        10 } ]
+
+  // ---> FIXED: Added FieldGroups and explicit Labels <---
+  @UI: { lineItem:       [ { position: 10 } ],
+         fieldGroup:     [ { qualifier: 'GeneralData', position: 10 } ],
+         selectionField: [ { position: 10 } ] }
+  @EndUserText.label: 'Employee ID'
+  EmpId;
+  
+  @UI: { lineItem:       [ { position: 20 } ],
+         fieldGroup:     [ { qualifier: 'GeneralData', position: 20 } ] }
+  @EndUserText.label: 'Employee Name'
+  EmpName;
+  
+  @UI: { lineItem:       [ { position: 30 } ],
+         fieldGroup:     [ { qualifier: 'GeneralData', position: 30 } ],
+         selectionField: [ { position: 20 } ] }
+  @EndUserText.label: 'Department'
+  Department;
+  
+  @UI: { lineItem:       [ { position: 40 } ],
+         fieldGroup:     [ { qualifier: 'GeneralData', position: 40 } ] }
+  @EndUserText.label: 'Leave Balance'
+  LeaveBalance;
+}

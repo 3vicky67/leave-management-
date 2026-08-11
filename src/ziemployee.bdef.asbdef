@@ -1,0 +1,35 @@
+managed implementation in class zbp_iemployee unique;
+strict ( 2 );
+with draft;
+
+define behavior for ziemployee alias Employee
+persistent table zemployee_db
+draft table zemployee_db_d
+lock master total etag LastChangedAt
+authorization master ( global, instance )
+{
+  create;
+  update;
+  delete;
+
+  // Draft lifecycle actions required by strict ( 2 )
+  draft action Edit;
+  draft action Activate;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  // Field control
+  field ( mandatory : create ) EmpId;
+  field ( readonly : update ) EmpId;
+
+  // Database mapping
+  mapping for zemployee_db
+  {
+    EmpId        = emp_id;
+    EmpName      = emp_name;
+    Department   = department;
+    LeaveBalance = leave_balance;
+    LastChangedAt = last_changed_at;
+  }
+}

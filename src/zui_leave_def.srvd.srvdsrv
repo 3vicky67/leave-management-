@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for Leave Management'
+define service ZUI_LEAVE_DEF {
+  expose ZC_LEAVE   as LeaveRequest;
+  expose ZCEmployee as Employee;
+}
