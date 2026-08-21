@@ -44,7 +44,6 @@ define root view entity ZC_LEAVE
   
   @EndUserText.label: 'Approval Status'
   Status,
-  
   StatusCriticality,
   CreatedAt,
   LocalLastChangedAt

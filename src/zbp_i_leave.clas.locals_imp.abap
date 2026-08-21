@@ -19,7 +19,7 @@ CLASS lhc_Leave DEFINITION INHERITING FROM cl_abap_behavior_handler.
       IMPORTING keys FOR Leave~setDefaultStatus.
 
     " ---> CHANGED: Replaced checkLeaveBalance with autoApproveReject <---
-    METHODS autoApproveReject FOR DETERMINE ON SAVE
+    METHODS autoApproveReject FOR DETERMINE ON MODIFY
       IMPORTING keys FOR Leave~autoApproveReject.
 
     METHODS validateDates FOR VALIDATE ON SAVE
@@ -60,12 +60,12 @@ CLASS lhc_Leave IMPLEMENTATION.
 
     LOOP AT lt_leave_requests INTO ls_req.
       APPEND VALUE #( %tky = ls_req-%tky
-                      " Enable Approve button if it's Pending OR currently Rejected
+                      " CHANGED: 'REJECT' to 'R'
                       %action-approveLeave = COND #( WHEN ls_req-Status = 'P' OR ls_req-Status = 'R'
                                                     THEN if_abap_behv=>fc-o-enabled
                                                     ELSE if_abap_behv=>fc-o-disabled )
 
-                      " Enable Reject button if it's Pending OR currently Approved
+                      " CHANGED: 'APPROVED' to 'A'
                       %action-rejectLeave  = COND #( WHEN ls_req-Status = 'P' OR ls_req-Status = 'A'
                                                     THEN if_abap_behv=>fc-o-enabled
                                                     ELSE if_abap_behv=>fc-o-disabled )

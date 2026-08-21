@@ -11,8 +11,15 @@ define root view entity ZI_Leave
   end_date as EndDate,
   total_days as TotalDays,
   reason as Reason,
-  status as Status,
-  status_criticality as StatusCriticality,
+  Status,
+  
+  // Add this calculation for the UI color
+  case Status
+    when 'A' then 3 
+    when 'R' then 1 
+    when 'P' then 2 
+    else 0          
+  end as StatusCriticality,
   
   // --- IMAGE FIELDS SPLIT ---
   @Semantics.imageUrl: true

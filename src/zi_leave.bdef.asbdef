@@ -30,7 +30,6 @@ etag master LocalLastChangedAt
   // ---> CHANGED: Replaced checkLeaveBalance validation with autoApproveReject determination <---
   draft determine action Prepare {
     validation validateDates;
-    determination autoApproveReject;
   }
 
   // Custom Actions
@@ -42,7 +41,7 @@ etag master LocalLastChangedAt
   validation validateDates on save { field StartDate, EndDate; create; update; }
 
   // ---> CHANGED: Added automatic approval/rejection determination on save <---
-  determination autoApproveReject on save { field TotalDays, EmpId; }
+  determination autoApproveReject on modify { field TotalDays, EmpId; }
 
   // Set default status to 'P' (Pending) on create
   determination setDefaultStatus on modify { create; }
@@ -62,7 +61,6 @@ etag master LocalLastChangedAt
     TotalDays          = total_days;
     Reason             = reason;
     Status             = status;
-    StatusCriticality  = status_criticality;
     CreatedBy          = created_by;
     CreatedAt          = created_at;
     LastChangedBy      = last_changed_by;

@@ -20,7 +20,7 @@ annotate view ZC_LEAVE with
   
   // ---> NEW: ImageUrlInput is only for the Object Page (text input) <---
   @UI: { identification: [ { position: 15, label: 'Image URL' } ] }
-  @UI.hidden: #(IsActiveEntity)
+  @UI.hidden: true 
   ImageUrlInput;
   
   @UI: { lineItem:       [ { position: 20 } ],
