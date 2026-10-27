@@ -55,6 +55,10 @@ annotate view ZC_LEAVE with
          identification: [ { position: 60 } ] }
   Reason;
   
+   @UI: { lineItem:       [ { position: 80 } ],
+         identification: [ { position: 70 } ] }
+  BalanceDays;
+  
   @UI: { lineItem:       [ { position: 80, criticality: 'StatusCriticality' },
                            { type: #FOR_ACTION, dataAction: 'approveLeave', label: 'Approve' },
                            { type: #FOR_ACTION, dataAction: 'rejectLeave', label: 'Reject' } ],

@@ -16,49 +16,38 @@ etag master LocalLastChangedAt
 
   field ( numbering : managed, readonly ) ReqId;
 
-  // ---> CHANGED: Added ImageUrl to readonly fields <---
-  field ( readonly ) TotalDays, Status, StatusCriticality, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy, LocalLastChangedAt, ImageUrl;
+  // RESTORED: Added EmpName to avoid activation errors since it is not in the DB table
+  field ( readonly ) EmpName, TotalDays, Status, StatusCriticality, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy, LocalLastChangedAt, ImageUrl;
 
   field ( mandatory ) EmpId, StartDate, EndDate, Reason;
 
-  // Draft Actions
   draft action Edit;
   draft action Activate optimized;
   draft action Discard;
   draft action Resume;
 
-  // ---> CHANGED: Replaced checkLeaveBalance validation with autoApproveReject determination <---
   draft determine action Prepare {
     validation validateDates;
   }
 
-  // Custom Actions
   action ( features : instance ) approveLeave result [1] $self;
   action ( features : instance ) rejectLeave result [1] $self;
 
-  // Determinations & Validations
   determination calculateDuration on modify { field StartDate, EndDate; }
   validation validateDates on save { field StartDate, EndDate; create; update; }
-
-  // ---> CHANGED: Added automatic approval/rejection determination on save <---
   determination autoApproveReject on modify { field TotalDays, EmpId; }
-
-  // Set default status to 'P' (Pending) on create
   determination setDefaultStatus on modify { create; }
 
-  // ---------------------------------------------------------
-  // FIELD MAPPING
-  // ---------------------------------------------------------
   mapping for zleave_req_db
   {
     ReqId              = req_id;
     EmpId              = emp_id;
     ImageUrlInput      = image_url;
-
     Department         = department;
     StartDate          = start_date;
     EndDate            = end_date;
     TotalDays          = total_days;
+    BalanceDays        = balance_days;
     Reason             = reason;
     Status             = status;
     CreatedBy          = created_by;

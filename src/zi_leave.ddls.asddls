@@ -11,6 +11,7 @@ define root view entity ZI_Leave
   end_date as EndDate,
   total_days as TotalDays,
   reason as Reason,
+  balance_days as BalanceDays,
   Status,
   
   // Add this calculation for the UI color

@@ -42,6 +42,9 @@ define root view entity ZC_LEAVE
   @EndUserText.label: 'Leave Reason'
   Reason,
   
+  @EndUserText.label: 'Balance Days'
+  BalanceDays,
+  
   @EndUserText.label: 'Approval Status'
   Status,
   StatusCriticality,

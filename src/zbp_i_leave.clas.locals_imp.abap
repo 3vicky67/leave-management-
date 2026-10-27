@@ -24,6 +24,7 @@ CLASS lhc_Leave DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS validateDates FOR VALIDATE ON SAVE
       IMPORTING keys FOR Leave~validateDates.
+
 ENDCLASS.
 
 CLASS lhc_Leave IMPLEMENTATION.
@@ -120,24 +121,38 @@ CLASS lhc_Leave IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD calculateDuration.
-    DATA lt_requests TYPE TABLE FOR READ RESULT ZI_LEAVE.
-    DATA ls_request LIKE LINE OF lt_requests.
-    DATA lt_update TYPE TABLE FOR UPDATE ZI_LEAVE.
-
-    READ ENTITIES OF ZI_LEAVE IN LOCAL MODE
+    READ ENTITIES OF ZI_Leave IN LOCAL MODE
       ENTITY Leave
-      FIELDS ( StartDate EndDate ) WITH CORRESPONDING #( keys )
-      RESULT lt_requests.
+        ALL FIELDS
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_leave).
 
-    LOOP AT lt_requests INTO ls_request WHERE StartDate IS NOT INITIAL AND EndDate IS NOT INITIAL.
-      DATA(lv_days) = ls_request-EndDate - ls_request-StartDate + 1.
-      APPEND VALUE #( %tky = ls_request-%tky TotalDays = lv_days ) TO lt_update.
+    LOOP AT lt_leave INTO DATA(ls_leave).
+      IF ls_leave-StartDate IS NOT INITIAL AND ls_leave-EndDate IS NOT INITIAL.
+
+        DATA(lv_days) = ls_leave-EndDate - ls_leave-StartDate + 1.
+        DATA lv_balance TYPE i VALUE 0.
+
+        IF ls_leave-EmpId IS NOT INITIAL.
+          " Fetch directly from zemployee_db
+          SELECT SINGLE leave_balance
+            FROM zemployee_db
+            WHERE emp_id = @ls_leave-EmpId
+            INTO @DATA(lv_emp_balance).
+
+          IF sy-subrc = 0.
+            lv_balance = lv_emp_balance - lv_days.
+          ENDIF.
+        ENDIF.
+
+        MODIFY ENTITIES OF ZI_Leave IN LOCAL MODE
+          ENTITY Leave
+            UPDATE FIELDS ( TotalDays BalanceDays )
+            WITH VALUE #( ( %tky        = ls_leave-%tky
+                            TotalDays   = lv_days
+                            BalanceDays = lv_balance ) ).
+      ENDIF.
     ENDLOOP.
-
-    IF lt_update IS NOT INITIAL.
-      MODIFY ENTITIES OF ZI_LEAVE IN LOCAL MODE
-        ENTITY Leave UPDATE FIELDS ( TotalDays ) WITH lt_update.
-    ENDIF.
   ENDMETHOD.
 
   METHOD setDefaultStatus.
